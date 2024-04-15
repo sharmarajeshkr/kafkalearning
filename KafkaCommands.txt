@@ -1,0 +1,74 @@
+docker-compose up -f file_name
+docker-compose down --remove-orphans
+**************************************************
+
+Starting Zookeeper
+
+zookeeper-server-start.bat ..\..\config\zookeeper.properties
+
+Starting Kafka
+
+kafka-server-start.bat ..\..\config\server.properties
+
+Crating Topics
+
+kafka-topics --bootstrap-server 127.0.0.1:9092 --topic first_topic --create --partitions 3 --replication-factor 1
+
+produce Message in topic
+
+kafka-console-producer.bat --broker-list localhost:9092 --topic test-topic
+kafka-console-producer.bat --broker-list localhost:9092 --topic first_topic --property "key.separator=-" --property "parse.key=true"
+
+Consume Message in topic
+kafka-console-consumer.bat --bootstrap-server localhost:9092 --topic test-topic --from-beginning
+kafka-console-consumer.bat --bootstrap-server localhost:9092 --topic first_topic --from-beginning -property "key.separator= - " --property "print.key=true"
+
+Condumer Offet
+
+List the topics in a cluster
+kafka-topics.bat --bootstrap-server localhost:9092 --list
+
+
+Describe topic
+Command to describe all the Kafka topics.
+	docker exec --interactive --tty kafka1  \
+	kafka-topics.bat --bootstrap-server localhost:9092 --describe
+Command to describe a specific Kafka topic.
+	docker exec --interactive --tty kafka1  \
+	kafka-topics.bat --bootstrap-server localhost:9092 --describe --topic first_topic
+	kafka-topics.bat --bootstrap-server localhost:9092 --describe --topic library-events
+
+How to view consumer groups
+	docker exec --interactive --tty kafka1  \
+	kafka-consumer-groups.bat --bootstrap-server localhost:9092 --list
+
+	console-consumer-22972
+    console-consumer-95409
+
+Consume Messages using Consumer Groups
+	docker exec --interactive --tty kafka1  \
+	kafka-console-consumer.bat --bootstrap-server localhost:9092 --topic first_topic --group console-consumer-22972  --property "key.separator= - " --property "print.key=true"
+
+
+Alter topic Partitions
+	docker exec --interactive --tty kafka1  \
+	kafka-topics.bat --bootstrap-server localhost:9092 	--alter --topic first_topic --partitions 40
+
+
+
+Set up a Kafka Cluster with 3 brokers
+Run this command and this will spin up a kafka cluster with 3 brokers.
+	docker-compose -f docker-compose-multi-broker.yml up
+Create topic with the replication factor as 3
+	docker exec --interactive --tty kafka1  \
+	kafka-topics --bootstrap-server kafka1:19092 \
+				 --create \
+				 --topic test-topic \
+				 --replication-factor 3 --partitions 3
+Produce Messages to the topic.
+	docker exec --interactive --tty kafka1  \
+	kafka-console-producer.bat --bootstrap-server localhost:9092,localhost:9093,localhost:9094 --topic test-topic
+Consume Messages from the topic.
+	docker exec --interactive --tty kafka1  \
+	kafka-console-consumer.bat --bootstrap-server localhost:9092,localhost:9093,localhost:9094 --topic test-topic --from-beginning
+
