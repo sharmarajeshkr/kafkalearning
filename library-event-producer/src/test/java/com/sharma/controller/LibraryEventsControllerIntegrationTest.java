@@ -44,4 +44,21 @@ class LibraryEventsControllerIntegrationTest {
         assertEquals( HttpStatus.CREATED, responseEntity.getStatusCode());
 
     }
+
+
+    @Test
+    void updateLibraryEvent() {
+        //given
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.set("content-type", MediaType.APPLICATION_JSON.toString());
+        var httpEntity = new HttpEntity<>(TestUtil.libraryEventRecordUpdate(), httpHeaders);
+
+        //when
+        var responseEntity = restTemplate
+                .exchange("/v1/libraryevent", HttpMethod.PUT,
+                        httpEntity, LibraryEvent.class);
+        //then
+        assertEquals( HttpStatus.OK, responseEntity.getStatusCode());
+
+    }
 }
