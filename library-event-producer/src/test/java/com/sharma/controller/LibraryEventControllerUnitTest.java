@@ -50,7 +50,7 @@ public class LibraryEventControllerUnitTest {
 
 
     @Test
-    void postLibrary_invalidEvent() throws Exception {
+    void postLibraryEvent_4xx() throws Exception {
         var actualErrorMessage = "book.bookId - must not be null, book.bookName - must not be blank";
         // given
         var libraryEvent = objectMapper.writeValueAsString(TestUtil.libraryEventRecordWithInvalidBook());
