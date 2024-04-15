@@ -16,6 +16,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(LibraryEventsController.class)
@@ -50,6 +51,7 @@ public class LibraryEventControllerUnitTest {
 
     @Test
     void postLibrary_invalidEvent() throws Exception {
+        var actualErrorMessage = "book.bookId - must not be null, book.bookName - must not be blank";
         // given
         var libraryEvent = objectMapper.writeValueAsString(TestUtil.libraryEventRecordWithInvalidBook());
         when(libraryEventsProducer.sendLibraryEventSynchronous(isA(LibraryEvent.class)))
@@ -59,7 +61,8 @@ public class LibraryEventControllerUnitTest {
         mockMvc.perform(MockMvcRequestBuilders.post("/v1/libraryevent")
                         .content(libraryEvent)
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().is4xxClientError());
+                .andExpect(status().is4xxClientError())
+                .andExpect(content().string(actualErrorMessage));
 
         // then
 
