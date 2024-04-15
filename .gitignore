@@ -1,0 +1,9 @@
+# Ignore temporary files
+*.tmp
+.DS_Store
+*.class
+.idea
+
+# Ignore build output directory
+target/
+idea/
