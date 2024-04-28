@@ -42,7 +42,7 @@ public class LibraryEventsController {
 
     @PutMapping("/v1/libraryevent")
     public ResponseEntity<?> updateLibraryEvent(@RequestBody @Valid LibraryEvent libraryEvent) throws JsonProcessingException {
-        log.info("libraryEvent : {} ", libraryEvent);
+        log.info("Update libraryEvent : {} ", libraryEvent);
 
         ResponseEntity<String> BAD_REQUEST = validateLibraryEvent(libraryEvent);
         if (BAD_REQUEST != null) return BAD_REQUEST;
@@ -59,7 +59,7 @@ public class LibraryEventsController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Please provide valid Library Event Id");
         }
 
-        if ( ! libraryEvent.libraryEventType().equals(LibraryEventType.UPDATE) ) {
+        if (!libraryEvent.libraryEventType().equals(LibraryEventType.UPDATE)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Only Update Event is supported");
 
         }

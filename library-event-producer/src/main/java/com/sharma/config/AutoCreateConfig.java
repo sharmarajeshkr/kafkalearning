@@ -18,8 +18,8 @@ public class AutoCreateConfig {
     @Bean
     public NewTopic libraryEvent(){
         return TopicBuilder.name(topic)
-                .partitions(3)
-                .replicas(3)
+                .partitions(1)
+                .replicas(1)
                 .build();
     }
 }
