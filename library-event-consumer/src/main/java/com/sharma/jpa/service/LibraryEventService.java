@@ -26,7 +26,6 @@ public class LibraryEventService {
         LibraryEvent libraryEvent = objectMapper.readValue(consumerRecord.value(), LibraryEvent.class);
         log.info("Library Event {} ", libraryEvent);
 
-
         switch (libraryEvent.getLibraryEventType()) {
             // Save
             case NEW -> {
@@ -37,8 +36,6 @@ public class LibraryEventService {
                 validate(libraryEvent);
                 save(libraryEvent);
             }
-
-
         }
     }
 
@@ -53,7 +50,7 @@ public class LibraryEventService {
         if (!libraryEventOptional.isPresent()) {
             throw new IllegalAccessException("Not a valid Library Event");
         }
-        log.info("Validation is successfully for library event {}", libraryEventOptional.get());
+        log.info("Validation is successfully for library event : {}", libraryEventOptional.get());
 
     }
 

@@ -23,7 +23,7 @@ Consume Message in topic
 kafka-console-consumer.bat --bootstrap-server localhost:9092 --topic test-topic --from-beginning
 kafka-console-consumer.bat --bootstrap-server localhost:9092 --topic first_topic --from-beginning -property "key.separator= - " --property "print.key=true"
 
-Condumer Offet
+Consumer Offet
 
 List the topics in a cluster
 kafka-topics.bat --bootstrap-server localhost:9092 --list

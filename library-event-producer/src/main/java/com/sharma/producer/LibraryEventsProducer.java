@@ -39,6 +39,8 @@ public class LibraryEventsProducer {
 
         Integer key = libraryEvent.libraryEventId();
         String value = objectMapper.writeValueAsString(libraryEvent);
+        log.info("Received Key {} ",key);
+        log.info("Received value {} ",value);
 
         ProducerRecord<Integer, String> producerRecord = buildProducerRecord(key, value, topic);
         var completableFuture = kafkaTemplate.send(producerRecord);

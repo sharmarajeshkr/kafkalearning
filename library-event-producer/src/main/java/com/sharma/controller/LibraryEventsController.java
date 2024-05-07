@@ -26,12 +26,12 @@ public class LibraryEventsController {
 
 
     @PostMapping("/v1/libraryevent")
-    public ResponseEntity<LibraryEvent> postLibraryEvent(@RequestBody @Valid LibraryEvent libraryEvent) throws JsonProcessingException {
+    public ResponseEntity<?> postLibraryEvent(@RequestBody @Valid LibraryEvent libraryEvent) throws JsonProcessingException {
         log.info("libraryEvent : {} ", libraryEvent);
 
-        /*if (LibraryEventType.NEW != libraryEvent.libraryEventType()) {
+        if (LibraryEventType.NEW != libraryEvent.libraryEventType()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Only NEW event type is supported");
-        }*/
+        }
         //invoke the kafka producer
         // libraryEventsProducer.sendLibraryEvent(libraryEvent);
         libraryEventsProducer.sendLibraryEvent_Approach2(libraryEvent);

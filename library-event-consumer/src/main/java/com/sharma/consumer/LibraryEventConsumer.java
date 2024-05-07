@@ -5,6 +5,7 @@ import com.sharma.jpa.service.LibraryEventService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.kafka.ConcurrentKafkaListenerContainerFactoryConfigurer;
@@ -27,7 +28,7 @@ public class LibraryEventConsumer {
     private String topicName;
     private KafkaProperties properties;
 
-
+    @Autowired
     private LibraryEventService libraryEventService;
 
     @KafkaListener(topics = "library-events")
