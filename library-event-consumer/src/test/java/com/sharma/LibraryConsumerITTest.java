@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.kafka.config.KafkaListenerEndpointRegistry;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.listener.MessageListenerContainer;
@@ -28,7 +29,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -152,6 +153,7 @@ public class LibraryConsumerITTest {
                 bookId(456).bookName("Kafka Using Spring Boot 2.x").bookAuthor("Sharma 2").build();
         libraryEvent.setLibraryEventType(LibraryEventType.UPDATE);
         libraryEvent.setBook(updatedBook);
+        libraryEvent.setLibraryEventId(null);
         String updatedJson = objectMapper.writeValueAsString(libraryEvent);
         kafkaTemplate.sendDefault(libraryEvent.getLibraryEventId(), updatedJson).get();
 
@@ -160,10 +162,22 @@ public class LibraryConsumerITTest {
         latch.await(3, TimeUnit.SECONDS);
 
         //then
-        //verify(libraryEventsConsumerSpy, times(1)).onMessage(isA(ConsumerRecord.class));
-        //verify(libraryEventsServiceSpy, times(1)).processLibraryEvent(isA(ConsumerRecord.class));
-        LibraryEvent persistedLibraryEvent = libraryEventsRepository.findById(libraryEvent.getLibraryEventId()).get();
-        assertEquals("Kafka Using Spring Boot 2.x", persistedLibraryEvent.getBook().getBookName());
+
+        // assertErr
+        verify(libraryEventsConsumerSpy, times(6)).onMessage(isA(ConsumerRecord.class));
+        verify(libraryEventsServiceSpy, times(6)).processLibraryEvent(isA(ConsumerRecord.class));
+
+        // LibraryEvent persistedLibraryEvent = libraryEventsRepository.findById(libraryEvent.getLibraryEventId()).get();
+        Throwable exception = assertThrows(InvalidDataAccessApiUsageException.class, () -> {
+            // Call the method with null id
+            libraryEventsRepository.findById(libraryEvent.getLibraryEventId()).get();
+        });
+        // Assert the exception message
+        String expectedMessage = "The given id must not be null";
+        String actualMessage = exception.getMessage();
+        assertTrue(actualMessage.contains(expectedMessage));
+
+
     }
 
 }
